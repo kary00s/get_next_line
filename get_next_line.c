@@ -6,25 +6,26 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 22:55:43 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/13 04:18:54 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/14 04:09:11 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"get_next_line.h"
+#include<stdio.h>
 
 ///////////////////////////////////////////////
 int check_new_line( char *buff)
 {
     int i = 0;
     
-    while(buff[i] != '\n' && !buff[i])
+    while(buff[i] != '\n' && buff[i])
         i++;
     if(buff[i] == '\n')
         return (i);
     return (-1);
 }
 ////////////////////////////////////////////////////c/////
-void ft_Isub_them(char *buff,int nl_index)
+void *ft_Isub_them(char *buff,int nl_index)
 {
     int i = 0;
     int len;
@@ -35,6 +36,7 @@ void ft_Isub_them(char *buff,int nl_index)
 		i++;
 	}
     buff[i] = '\0';
+    return (buff);
 }
 
 /////////////////////////////////////////////////////////
@@ -42,37 +44,36 @@ char *get_next_line(int fd)
 {
     static char *buff = NULL;;
     char *res_line;
+    char *line;
     int nl_index;
     int len_readed;
     len_readed = 1;
+    int count = 0;
     if(fd < 0 || read(fd, 0, 0) < 0)
-        return NULL;
-    if(buff != NULL)
-    {
-        buff = malloc(BUFFER_SIZE);
-        if(!buff)
-            return  NULL;
-        buff[0] = 0;   
-    }
+    return NULL;
+    // if(buff == NULL)
+    // {
+    //     buff = malloc(BUFFER_SIZE + 1);
+    //     if(!buff)
+    //         return  NULL;
+    //     buff[0] = 0;
+    // }
     nl_index = check_new_line(buff);
     if (nl_index != -1)
     {
-        res_line = ft_Ijoin_them(res_line,buff,1);
-        ft_Isub_them(buff,nl_index);
+        res_line = ft_Ijoin_them(res_line,buff);
         return (res_line);
+        ft_Isub_them(buff,nl_index);
     }
-    else 
+    while (nl_index == -1 && len_readed != 0)
     {
-        while (nl_index == -1 && len_readed != 0)
-        {
-            res_line = ft_Ijoin_them(res_line,buff,0);
-            len_readed = read(fd,buff,BUFFER_SIZE);
-            nl_index = check_new_line(buff);
-        }
-        res_line = ft_Ijoin_them(res_line,buff,1);
-        return(res_line);
+        res_line = ft_Ijoin_them(res_line,buff);
+        len_readed = read(fd,buff,BUFFER_SIZE);
+        buff[len_readed] = 0;
+        nl_index = check_new_line(buff);
     }
-    
+    res_line = ft_Ijoin_them(res_line,buff);
+    return(res_line);
     return (NULL);
 }
 #include <fcntl.h>
@@ -80,6 +81,7 @@ int main(void)
 {
     int fd;
     char *line;
+    char *line1;
 
     fd = open("test.txt", O_RDONLY);
     if (fd < 0)
@@ -89,8 +91,10 @@ int main(void)
     }
 
     line = get_next_line(fd);
+    
+    line1 = get_next_line(fd);
 
-        printf("%s", line); 
+        printf("%s\n", line); 
         free(line);
 
 

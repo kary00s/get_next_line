@@ -6,7 +6,7 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 15:57:19 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/13 04:20:09 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/14 01:01:53 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@
 
 char    *get_next_line(int fd);
 char	*ft_strjoin(char  *s1, char  *s2);
-char	*ft_Ijoin_them(char  *res_line, char  *buff,int x);
+char	*ft_Ijoin_them(char  *res_line, char  *buff);
 char	*ft_strdup( char *s);
 
 size_t	ft_strlen( char *s);
 
-int	    ft_copy( char *s, char *p, int i);
+int	ft_copy( char *bu_re, char *p, int i);
 
-void ft_Isub_them(char *buff,int nl_index);
+void *ft_Isub_them(char *buff,int nl_index);
 int check_new_line( char *buff);
 #endif
