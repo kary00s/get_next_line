@@ -6,7 +6,7 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 22:55:43 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/14 04:09:11 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/16 05:59:19 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,87 +28,102 @@ int check_new_line( char *buff)
 void *ft_Isub_them(char *buff,int nl_index)
 {
     int i = 0;
-    int len;
-    len = ft_strlen(buff) - nl_index + 1;
-	while (i < len && buff[nl_index + i])
-	{
-		buff[i] = buff[nl_index + i];
-		i++;
-	}
-    buff[i] = '\0';
+    int len; 
+    len = ft_strlen(buff) - (nl_index + 1);
+    // if (nl_index == -1)
+    //     buff[0] = 0;
+    ft_memcpy(buff, buff + nl_index + 1, len + 1);
+    buff[len + 1] = '\0';
     return (buff);
 }
-
 /////////////////////////////////////////////////////////
-char *get_next_line(int fd)
+char *check_buff(int fd,char *buff)
 {
-    static char *buff = NULL;;
-    char *res_line;
-    char *line;
-    int nl_index;
-    int len_readed;
-    len_readed = 1;
-    int count = 0;
+    
     if(fd < 0 || read(fd, 0, 0) < 0)
-    return NULL;
-    // if(buff == NULL)
-    // {
-    //     buff = malloc(BUFFER_SIZE + 1);
-    //     if(!buff)
-    //         return  NULL;
-    //     buff[0] = 0;
-    // }
+            return NULL;
+    if(buff == NULL)
+    {
+        buff = malloc(BUFFER_SIZE + 1);
+        if(!buff)
+            return  NULL;
+        buff[0] = 0;
+    }
+    return buff;
+}
+char *ft_Ido_evryt(int fd,char *buff,char *res_line,int len_readed,int nl_index)
+{
     nl_index = check_new_line(buff);
+    res_line = ft_Ijoin_them(res_line,buff);
+    if (res_line == NULL)
+        return NULL;
     if (nl_index != -1)
     {
-        res_line = ft_Ijoin_them(res_line,buff);
-        return (res_line);
         ft_Isub_them(buff,nl_index);
+        return res_line;
     }
-    while (nl_index == -1 && len_readed != 0)
+    while (len_readed > 0 && nl_index == -1)
     {
-        res_line = ft_Ijoin_them(res_line,buff);
         len_readed = read(fd,buff,BUFFER_SIZE);
-        buff[len_readed] = 0;
+        buff[len_readed] = '\0';
+        res_line = ft_Ijoin_them(res_line,buff);
+        if (res_line == NULL)
+            return NULL;
+        
         nl_index = check_new_line(buff);
+        
+        if (nl_index != -1)
+        {
+            ft_Isub_them(buff,nl_index);
+            return(res_line);
+        }
     }
-    res_line = ft_Ijoin_them(res_line,buff);
-    return(res_line);
     return (NULL);
+}
+
+char *get_next_line(int fd)
+{
+    static char *buff = NULL;
+    char        *res_line;
+    int         nl_index;
+    int         len_readed;
+    
+    len_readed = 1;
+    res_line = ft_strdup("");
+    if (res_line == NULL)
+        return NULL;
+        
+    buff = check_buff(fd,buff);
+    res_line = ft_Ido_evryt(fd,buff,res_line,len_readed,nl_index);
+    if(!res_line)
+        return NULL;
+    
+    if (len_readed == 0 && res_line[0] == 0)
+    {
+        free(buff);
+        free(res_line);
+        return NULL;
+    }
+    return(res_line);
 }
 #include <fcntl.h>
 int main(void)
 {
     int fd;
     char *line;
-    char *line1;
-
     fd = open("test.txt", O_RDONLY);
     if (fd < 0)
     {
         perror("Error opening file");
         return (1);
     }
-
-    line = get_next_line(fd);
-    
-    line1 = get_next_line(fd);
-
-        printf("%s\n", line); 
+    line =get_next_line(fd);
+    while (line)
+    {
+        printf("%s", line);
         free(line);
-
-
+        line =get_next_line(fd);
+    }
     close(fd);
     return (0);
 }
-// check if the buffer has newline
-// case 1: if theres newline copy whats the buffer until new_line 
-// and move what`s after newline to the begening of 
-// the buffer and return the line
-// case 2: if ther`s no newline copy the whole buffer
-// and go read from the file again.
-// case 2: 
-// case:2-1: if theres newline copy the whats in the buffer
-//  until new line and return the line.
-// case: 2-2: if theres no newline repeat the cycle.
-

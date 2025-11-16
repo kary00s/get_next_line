@@ -6,7 +6,7 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 15:38:59 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/14 04:09:33 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/15 22:45:32 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,25 +45,6 @@ char	*ft_strdup( char *s)
 	return (p);
 }
 /////////////////////////////////////////////////////////////////
-int	ft_copy( char *bu_re, char *p, int i)
-{
-    int	j;
-    
-	j = 0;
-	int nl_index;
-	nl_index = check_new_line(bu_re);
-	if (nl_index == -1 )
-	{
-		while (bu_re[j])
-			p[i++] = bu_re[j++];
-	}
-	else if(nl_index != -1)
-	{
-		while (bu_re[j] != '\n')
-			p[i++] = bu_re[j++];
-	}
-	return (i); 
-}
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t			i;
@@ -82,9 +63,9 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 		d[i] = s[i];
 		i++;
 	}
-	return (dest);
+	return(dest);
 }
-
+///////////////////////////////////////////////////////////////
 char	*ft_Ijoin_them(char *res_line, char *buff)
 {
 	char	*p;
@@ -93,20 +74,30 @@ char	*ft_Ijoin_them(char *res_line, char *buff)
     int nl_index;
 	int p_len;
 	int	res_line_len;
+	int buff_len;
+	buff_len = ft_strlen(buff);
+		
 	nl_index = check_new_line(buff);
 	res_line_len = ft_strlen(res_line);
+
 	if (nl_index != -1)
-		p_len = nl_index + 1;
+		p_len =res_line_len + nl_index + 1;
 	else
-		p_len = ft_strlen(buff);
+		p_len = res_line_len + ft_strlen(buff);
 	
 	p = (char *)malloc(p_len + 1);
 	if (!p)
+	{
+		free (buff);
+		free (res_line);
 		return (NULL);
-	
-	if (nl_index == -1)
-		ft_memcpy(p + res_line_len, buff, ft_strlen(buff) + 1);
+	}
+	ft_memcpy(p, res_line, res_line_len);
+	if (nl_index != -1)
+		   ft_memcpy(p + res_line_len, buff, nl_index + 1);
 	else
-		ft_memcpy(p+ res_line_len, buff, nl_index + 1);
+		ft_memcpy(p + res_line_len, buff, buff_len);
 	p[p_len] = '\0';
+	free(res_line);
+	return(p);
 }
