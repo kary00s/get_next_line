@@ -6,7 +6,7 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 22:55:43 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/18 01:10:57 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/18 01:39:39 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,24 +98,24 @@ char *get_next_line(int fd)
     return(res_line);
 }
 
-#include <fcntl.h>
-int main(void)
-{
-    int fd;
-    char *line;
-    fd = open("test.txt", O_RDONLY);
-    if (fd < 0)
-    {
-        perror("Error opening file");
-        return (1);
-    }
-    line =get_next_line(fd);
-    while (line)
-    {
-        printf("%s", line);
-        free(line);
-        line =get_next_line(fd);
-    }
-    close(fd);
-    return (0);
-}
+// #include <fcntl.h>
+// int main(void)
+// {
+//     int fd;
+//     char *line;
+//     fd = open("test.txt", O_RDONLY);
+//     if (fd < 0)
+//     {
+//         perror("Error opening file");
+//         return (1);
+//     }
+//     line =get_next_line(fd);
+//     while (line)
+//     {
+//         printf("%s", line);
+//         free(line);
+//         line =get_next_line(fd);
+//     }
+//     close(fd);
+//     return (0);
+// }
