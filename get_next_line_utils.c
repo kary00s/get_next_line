@@ -6,7 +6,7 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 15:38:59 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/15 22:45:32 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/18 01:30:16 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,22 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 char	*ft_Ijoin_them(char *res_line, char *buff)
 {
 	char	*p;
-	int		i;
-    i = 0; 
     int nl_index;
 	int p_len;
 	int	res_line_len;
-	int buff_len;
-	buff_len = ft_strlen(buff);
-		
+	
 	nl_index = check_new_line(buff);
 	res_line_len = ft_strlen(res_line);
-
 	if (nl_index != -1)
-		p_len =res_line_len + nl_index + 1;
+		p_len = res_line_len + nl_index + 1;
 	else
 		p_len = res_line_len + ft_strlen(buff);
-	
+	p = ft_Ifill_them(p,res_line,buff,res_line_len,p_len,nl_index);
+	free(res_line);
+	return(p);
+}
+char *ft_Ifill_them(char *p,char *res_line,char *buff,int res_line_len,int p_len,int nl_index)
+{
 	p = (char *)malloc(p_len + 1);
 	if (!p)
 	{
@@ -92,12 +92,14 @@ char	*ft_Ijoin_them(char *res_line, char *buff)
 		free (res_line);
 		return (NULL);
 	}
+	
+	int buff_len;
+	buff_len = ft_strlen(buff);
 	ft_memcpy(p, res_line, res_line_len);
 	if (nl_index != -1)
 		   ft_memcpy(p + res_line_len, buff, nl_index + 1);
 	else
 		ft_memcpy(p + res_line_len, buff, buff_len);
 	p[p_len] = '\0';
-	free(res_line);
-	return(p);
+	return p;
 }
