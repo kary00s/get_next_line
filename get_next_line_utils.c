@@ -6,14 +6,13 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 15:38:59 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/18 01:30:16 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/20 00:31:45 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"get_next_line.h"
+#include "get_next_line.h"
 
-/////////////////////////////////////////////////
-size_t	ft_strlen( char *s)
+size_t	ft_strlen(char *s)
 {
 	size_t	i;
 
@@ -23,9 +22,7 @@ size_t	ft_strlen( char *s)
 	return (i);
 }
 
-////////////////////////////////////////////////////////
-
-char	*ft_strdup( char *s)
+char	*ft_strdup(char *s)
 {
 	int		i;
 	int		len;
@@ -44,7 +41,7 @@ char	*ft_strdup( char *s)
 	p[i] = '\0';
 	return (p);
 }
-/////////////////////////////////////////////////////////////////
+
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t			i;
@@ -63,43 +60,40 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 		d[i] = s[i];
 		i++;
 	}
-	return(dest);
+	return (dest);
 }
-///////////////////////////////////////////////////////////////
-char	*ft_Ijoin_them(char *res_line, char *buff)
+
+char	*ft_join(char *res_line, char *buff)
 {
+	int		nl_index;
+	int		res_line_len;
 	char	*p;
-    int nl_index;
-	int p_len;
-	int	res_line_len;
-	
+
 	nl_index = check_new_line(buff);
 	res_line_len = ft_strlen(res_line);
 	if (nl_index != -1)
-		p_len = res_line_len + nl_index + 1;
+		p = ft_fill(res_line, buff, res_line_len, nl_index + 1);
 	else
-		p_len = res_line_len + ft_strlen(buff);
-	p = ft_Ifill_them(p,res_line,buff,res_line_len,p_len,nl_index);
+		p = ft_fill(res_line, buff, res_line_len, ft_strlen(buff));
 	free(res_line);
-	return(p);
+	return (p);
 }
-char *ft_Ifill_them(char *p,char *res_line,char *buff,int res_line_len,int p_len,int nl_index)
+
+char	*ft_fill(char *res_line, char *buff, int len1, int len2)
 {
-	p = (char *)malloc(p_len + 1);
+	char	*p;
+	int		total;
+
+	total = len1 + len2;
+	p = malloc(total + 1);
 	if (!p)
 	{
-		free (buff);
-		free (res_line);
+		free(res_line);
+		free(buff);
 		return (NULL);
 	}
-	
-	int buff_len;
-	buff_len = ft_strlen(buff);
-	ft_memcpy(p, res_line, res_line_len);
-	if (nl_index != -1)
-		   ft_memcpy(p + res_line_len, buff, nl_index + 1);
-	else
-		ft_memcpy(p + res_line_len, buff, buff_len);
-	p[p_len] = '\0';
-	return p;
+	ft_memcpy(p, res_line, len1);
+	ft_memcpy(p + len1, buff, len2);
+	p[total] = '\0';
+	return (p);
 }
