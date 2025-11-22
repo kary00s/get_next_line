@@ -6,7 +6,7 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 15:38:59 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/22 01:57:17 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/22 02:23:52 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*ft_join(char *res_line, char *buff)
 	else
 		p = ft_fill(res_line, buff, res_line_len, ft_strlen(buff));
 	if (!p)
-		return (free(buff),free(res_line),NULL);
+		return (free(buff), free(res_line), NULL);
 	return (p);
 }
 
@@ -88,8 +88,7 @@ char	*ft_fill(char *res_line, char *buff, int len1, int len2)
 	total = len1 + len2;
 	p = malloc(total + 1);
 	if (!p)
-		return (free(buff),free(res_line),buff = NULL,NULL);
-
+		return (free(buff), free(res_line), buff = NULL, NULL);
 	ft_memcpy(p, res_line, len1);
 	ft_memcpy(p + len1, buff, len2);
 	p[total] = '\0';

@@ -6,8 +6,7 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 00:17:56 by kanahiz           #+#    #+#             */
-
-/*   Updated: 2025/11/21 20:08:17 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/22 02:22:34 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +37,7 @@ void	*ft_sub_buff(char *buff, int nl_index)
 char	*check_buff(char *buff)
 {
 	if (buff == NULL)
-	{
-		
+	{	
 		buff = malloc(BUFFER_SIZE + 1);
 		if (!buff)
 			return (NULL);
@@ -51,7 +49,7 @@ char	*check_buff(char *buff)
 char	*ft_do_all(int fd, char *buff, char *res_line, int *len_readed)
 {
 	int	nl_index;
-	
+
 	nl_index = check_new_line(buff);
 	res_line = ft_join(res_line, buff);
 	if (!res_line)
@@ -84,14 +82,10 @@ char	*get_next_line(int fd)
 	int			len_readed;
 
 	len_readed = 1;
-
-	if ((read(fd, 0, 0) < 0 ) || (BUFFER_SIZE <= 0))
+	if ((read(fd, 0, 0) < 0) || (BUFFER_SIZE <= 0))
 	{
-		if(buff)
-		{
-			free (buff);
-			buff = NULL;
-		}
+		if (buff)
+			return (free (buff), buff = NULL, NULL);
 		return (NULL);
 	}
 	buff = check_buff(buff);
@@ -99,17 +93,12 @@ char	*get_next_line(int fd)
 		return (NULL);
 	res_line = ft_strdup("");
 	if (!res_line)
-		return (free (buff) ,NULL);
+		return (free (buff), NULL);
 	res_line = ft_do_all(fd, buff, res_line, &len_readed);
 	if (!res_line)
 		return (NULL);
 	if ((len_readed == 0 && res_line[0] == '\0'))
-	{	
-		free(buff);
-		free (res_line);
-		buff = NULL;
-		return (NULL);
-	}
+		return (free (res_line), free(buff), buff = NULL, NULL);
 	return (res_line);
 }
 // #include <stdio.h>
