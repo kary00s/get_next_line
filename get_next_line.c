@@ -6,7 +6,8 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 00:17:56 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/21 01:45:29 by kanahiz          ###   ########.fr       */
+
+/*   Updated: 2025/11/21 20:08:17 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +31,7 @@ void	*ft_sub_buff(char *buff, int nl_index)
 
 	len = ft_strlen(buff) - (nl_index + 1);
 	ft_memcpy(buff, buff + nl_index + 1, len + 1);
-	buff[len + 1] = '\0';
+	buff[len] = '\0';
 	return (buff);
 }
 
@@ -38,6 +39,7 @@ char	*check_buff(char *buff)
 {
 	if (buff == NULL)
 	{
+		
 		buff = malloc(BUFFER_SIZE + 1);
 		if (!buff)
 			return (NULL);
@@ -49,10 +51,10 @@ char	*check_buff(char *buff)
 char	*ft_do_all(int fd, char *buff, char *res_line, int *len_readed)
 {
 	int	nl_index;
-
+	
 	nl_index = check_new_line(buff);
 	res_line = ft_join(res_line, buff);
-	if (res_line == NULL)
+	if (!res_line)
 		return (NULL);
 	if (nl_index != -1)
 	{
@@ -62,6 +64,8 @@ char	*ft_do_all(int fd, char *buff, char *res_line, int *len_readed)
 	while (*len_readed > 0 && nl_index == -1)
 	{
 		*len_readed = read(fd, buff, BUFFER_SIZE);
+		if (*len_readed < 0)
+			return (NULL);
 		buff[*len_readed] = '\0';
 		res_line = ft_join(res_line, buff);
 		if (!res_line)
@@ -80,24 +84,51 @@ char	*get_next_line(int fd)
 	int			len_readed;
 
 	len_readed = 1;
-	if (read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
+
+	if ((read(fd, 0, 0) < 0 ) || (BUFFER_SIZE <= 0))
+	{
+		if(buff)
+		{
+			free (buff);
+			buff = NULL;
+		}
 		return (NULL);
+	}
 	buff = check_buff(buff);
 	if (!buff)
 		return (NULL);
 	res_line = ft_strdup("");
 	if (!res_line)
-	{
-		free (buff);
-		return (NULL);
-	}
+		return (free (buff) ,NULL);
 	res_line = ft_do_all(fd, buff, res_line, &len_readed);
-	if ((len_readed == 0 && res_line[0] == '\0') || (!res_line))
-	{
+	if (!res_line)
+		return (NULL);
+	if ((len_readed == 0 && res_line[0] == '\0'))
+	{	
 		free(buff);
-		if (res_line)
-			free(res_line);
+		free (res_line);
+		buff = NULL;
 		return (NULL);
 	}
 	return (res_line);
 }
+// #include <stdio.h>
+// #include <fcntl.h>
+// int main ()
+// {
+// 	int fd = open("file", O_RDONLY);
+// 	char *line= get_next_line(fd);
+// 	// char *temp;
+// 	// 		do {
+// 	// 			temp = get_next_line(fd);
+// 	// 			printf("%s",temp);
+// 	// 			free(temp);
+// 	// 		} while (temp != NULL);
+// 	while(line)
+// 	{
+// 		printf("|%s|", line);
+// 		free(line);
+// 		line = get_next_line(fd);
+// 	}
+// 	close(fd);
+// }
