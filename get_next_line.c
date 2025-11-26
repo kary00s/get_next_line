@@ -6,7 +6,7 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 00:17:56 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/22 02:22:34 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/24 18:16:54 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*check_buff(char *buff)
 {
 	if (buff == NULL)
 	{	
-		buff = malloc(BUFFER_SIZE + 1);
+		buff = malloc((size_t)BUFFER_SIZE + 1);
 		if (!buff)
 			return (NULL);
 		buff[0] = '\0';
@@ -82,7 +82,7 @@ char	*get_next_line(int fd)
 	int			len_readed;
 
 	len_readed = 1;
-	if ((read(fd, 0, 0) < 0) || (BUFFER_SIZE <= 0))
+	if (fd < 0 || (BUFFER_SIZE <= 0))
 	{
 		if (buff)
 			return (free (buff), buff = NULL, NULL);
@@ -101,23 +101,3 @@ char	*get_next_line(int fd)
 		return (free (res_line), free(buff), buff = NULL, NULL);
 	return (res_line);
 }
-// #include <stdio.h>
-// #include <fcntl.h>
-// int main ()
-// {
-// 	int fd = open("file", O_RDONLY);
-// 	char *line= get_next_line(fd);
-// 	// char *temp;
-// 	// 		do {
-// 	// 			temp = get_next_line(fd);
-// 	// 			printf("%s",temp);
-// 	// 			free(temp);
-// 	// 		} while (temp != NULL);
-// 	while(line)
-// 	{
-// 		printf("|%s|", line);
-// 		free(line);
-// 		line = get_next_line(fd);
-// 	}
-// 	close(fd);
-// }

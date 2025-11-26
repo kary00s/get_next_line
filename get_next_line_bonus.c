@@ -1,4 +1,5 @@
-/* ************************************************************************** */
+/
+************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
@@ -6,7 +7,7 @@
 /*   By: kanahiz <kanahiz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 14:30:33 by kanahiz           #+#    #+#             */
-/*   Updated: 2025/11/22 15:39:09 by kanahiz          ###   ########.fr       */
+/*   Updated: 2025/11/22 16:06:16 by kanahiz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +39,7 @@ char	*check_buff(char *buff)
 {
 	if (buff == NULL)
 	{	
-		buff = malloc(BUFFER_SIZE + 1);
+		buff = malloc((size_t)BUFFER_SIZE + 1);
 		if (!buff)
 			return (NULL);
 		buff[0] = '\0';
@@ -82,7 +83,7 @@ char	*get_next_line(int fd)
 	int			len_readed;
 
 	len_readed = 1;
-	if ((read(fd, 0, 0) < 0) || (BUFFER_SIZE <= 0))
+	if ((fd < 0) || (BUFFER_SIZE <= 0))
 	{
 		if (buff[fd])
 			return (free (buff[fd]), buff[fd] = NULL, NULL);
@@ -101,28 +102,3 @@ char	*get_next_line(int fd)
 		return (free (res_line), free(buff[fd]), buff[fd] = NULL, NULL);
 	return (res_line);
 }
-// #include <stdio.h>
-// #include <fcntl.h>
-// int main ()
-// {
-// 	int fd1 = open("test1.txt", O_RDONLY);
-// 	int fd2 = open("test2.txt", O_RDONLY);
-// 	char *line;
-//         line = get_next_line(fd1);
-//         printf("|%s|", line);
-// 		free(line);
-// 		line = get_next_line(fd2);
-//     	printf("|%s|", line);
-// 		free(line);
-
-// 		line = get_next_line(fd1);
-//         printf("|%s|", line);
-// 		free(line);
-
-// 		line = get_next_line(fd2);
-// 		printf("|%s|", line);
-// 		free(line);
-
-// 		close(fd1);
-// 		close(fd2);
-// 	}
